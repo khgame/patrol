@@ -27,6 +27,7 @@
   "dependencies": {
     "@khgame/turtle": "^0.0.76",
     "consul": "^0.34.1",
+    "eosplayer": "^0.5.11",
     "fs-extra": "^8.1.0",
     "ioredis": "^4.11.2",
     "kcors": "^2.2.2",

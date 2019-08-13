@@ -8,15 +8,16 @@ export class AccountController {
 
     public log: Logger = genLogger("api:panel");
 
-    constructor() { }
+    constructor() {
+    }
 
     @Get("/info")
-    async info(){
+    async info() {
         return Math.floor((new Date()).getTime() / 3600000);
     }
 
     @Get("/running_process")
-    async getProcessRunning(){
+    async getProcessRunning() {
         return SampleWorker.inst.processRunning;
     }
 

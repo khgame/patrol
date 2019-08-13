@@ -1,3 +1,1 @@
-export * from "./sampleWorker"
-
-
+export * from "./sampleWorker";

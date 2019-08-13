@@ -1,1 +1,1 @@
-export * from "./panelController"
+export * from "./panelController";
