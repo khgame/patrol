@@ -2,7 +2,7 @@
 export const defaultConf = {
     "name": "patrol",
     "id": 0,
-    "port": 8001,
+    "port": 19847,
     "setting": {
         "log_prod_console": "info"
     },

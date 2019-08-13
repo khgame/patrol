@@ -11,7 +11,7 @@ import {Api} from "./api";
 const cli = new CommandLineApp(
     "patrol",
     "0.0.1",
-    ["mongo"],
+    [],
     () => new Api(Object.values(controllers)),
     Object.values(workers).map(w => (() => new w())),
     defaultConf as IConf
