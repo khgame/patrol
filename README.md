@@ -8,6 +8,15 @@ which can help you easily master various types of scheduled tasks.
 
 # Table of Contents
 
+* [Installation](#installation)
+* [Quick Start](#quick-start)
+    - [Configs](#configs)
+        - [Configs Folders](#config-folders)
+        - [Configs Files](#config-files)
+* [Logs](#logs)
+* [Supported tasks](#supported-tasks)
+    - [Js scripts and node packages](#js-scripts-and-node-packages)
+
 ## Installation
 
 - install with npm
