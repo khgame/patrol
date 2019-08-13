@@ -1,4 +1,5 @@
 {
   "script" : "./example/example",
-  "rule": "* * * * * *"
+  "rule": "* * * * * *",
+  "sendMail": true
 }

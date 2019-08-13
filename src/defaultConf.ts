@@ -24,5 +24,15 @@ export const defaultConf = {
             }
         }
     },
-    "rules": {}
-}
+    "rules": {
+       "mail_option": {
+            "host": "smtp.exmail.qq.com",
+            "port": 465,
+            "secureConnection": true,
+            "auth": {
+                "user": "",
+                "pass": ""
+            }
+        }
+    }
+};

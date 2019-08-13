@@ -2,7 +2,7 @@
 
 module.exports = {
 
-    schedule: () => {
-        console.log(Date.now())
+    schedule: (log) => {
+        log.info(Date.now())
     }
 }
