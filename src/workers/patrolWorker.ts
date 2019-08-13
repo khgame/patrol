@@ -27,7 +27,8 @@ interface IScheduler {
     tag: string;
     hash: string;
     rule: string;
-    job: Job;
+    job?: Job;
+    running: boolean;
 }
 
 
@@ -46,10 +47,24 @@ export class PatrolWorker extends Worker implements IWorker {
         this.runningState = WorkerRunningState.PREPARED;
     }
 
-    scheduler: IScheduler[] = [];
+    schedulers: IScheduler[] = [];
 
     public getScheduler(tag: string): IScheduler | null {
-        return this.scheduler.find(s => s.tag === tag) || null;
+        return this.schedulers.find(s => s.tag === tag) || null;
+    }
+
+    public removeScheduler(tag: string) {
+        const scheduler = this.getScheduler(tag);
+
+        if (!scheduler) {
+            throw new Error(`⊙ remove scheduler failed: the scheduler ${tag} are not exist.`);
+        }
+
+        if (scheduler.job) {
+            scheduler.job.cancel();
+        }
+
+        this.schedulers.splice(this.schedulers.indexOf(scheduler), 1);
     }
 
     public insertScheduler(
@@ -57,18 +72,29 @@ export class PatrolWorker extends Worker implements IWorker {
         hash: string,
         rule: string,
         method: (log: Logger) => Promise<void>
-    ): boolean {
+    ) {
         const scheduler = this.getScheduler(tag);
 
-        if (scheduler && scheduler.hash === hash) {
-            return false;
+        if (scheduler) {
+            if (scheduler.hash === hash) {
+                throw new Error(`⊙ insert scheduler failed: the scheduler ${tag} of hash ${hash} is already exist.`);
+            }
+
+            if (scheduler.running) {
+                this.log.info(`⊙ replace scheduler ${tag} of hash ${scheduler.hash} failed: the scheduler ${tag} of hash ${hash} is running.`);
+                return;
+            }
+
+            this.log.info(`⊙ detect scheduler ${tag} hash changed, ${scheduler.hash} => ${hash}, start update.`);
+            this.removeScheduler(tag);
         }
 
-        const task: any = {
-            tag, rule, runningOffset: 0,
+        const task: IScheduler = {
+            tag, rule, hash, running: false
         };
         const job: Job = scheduleJob(rule, async () => {
             this.processRunning += 1;
+            task.running = true;
             try {
                 this.log.warn(`⊙ schedule ${tag} triggered, rule:"${rule}"`);
                 await Promise.resolve(method(genLogger(tag)));
@@ -77,13 +103,14 @@ export class PatrolWorker extends Worker implements IWorker {
                 throw e;
             } finally {
                 this.processRunning -= 1;
+                task.running = false;
             }
         });
 
-        console.log(`created job ${tag} rule:"${rule}" job:${job}`);
-        task.job = job;
+        this.log.info(`⊙ created job ${tag} rule:"${rule}" job:${job}`);
 
-        this.scheduler.push(task);
+        task.job = job;
+        this.schedulers.push(task);
 
         return true;
     }
@@ -103,6 +130,7 @@ export class PatrolWorker extends Worker implements IWorker {
         this.log.info("⊙ loadTasks started");
         let round = 0;
         while (true) {
+            await forMs(10000);
             this.log.info(`⊙ loadTasks ${this.name} round ${round} started `);
 
             this.processRunning += 1;
@@ -129,8 +157,6 @@ export class PatrolWorker extends Worker implements IWorker {
                     );
                 }
 
-                // console.log(ds);
-
                 for (const i in ds) {
                     const d = ds[i];
 
@@ -138,18 +164,23 @@ export class PatrolWorker extends Worker implements IWorker {
                     const tagName = baseName.substr(0, baseName.length - 12);
 
                     try {
-                        console.log(`try create scheduler ${tagName}: read file ${d}`);
                         const dataStr = fs.readFileSync(d).toString();
                         const data = JSON.parse(dataStr);
+                        const hash = Crypto.getMd5(dataStr);
 
-                        console.log(data, Path.dirname(d));
+                        const existedScheduler = this.getScheduler(tagName);
+                        if (existedScheduler && existedScheduler.hash === hash) {
+                            continue;
+                        }
+
+                        this.log.info(`⊙ start load scheduler ${tagName}: read file ${d}`);
 
                         const {schedule} = require(Path.isAbsolute(data.script) ? data.script : Path.resolve(Path.dirname(d), data.script));
 
-                        const result = this.insertScheduler(tagName, Crypto.getMd5(dataStr), data.rule, schedule);
+                        this.insertScheduler(tagName, hash, data.rule, schedule);
 
                     } catch (e) {
-                        console.error(`load data ${d} error: ${e}, ${e.stack}`);
+                        console.error(`⊙ load data ${d} error: ${e}, ${e.stack}`);
                     }
                 }
 
