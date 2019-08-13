@@ -13,9 +13,13 @@ which can help you easily master various types of scheduled tasks.
     - [Configs](#configs)
         - [Configs Folders](#config-folders)
         - [Configs Files](#config-files)
-* [Logs](#logs)
-* [Supported tasks](#supported-tasks)
+* [Supported Tasks](#supported-tasks)
     - [Js scripts and node packages](#js-scripts-and-node-packages)
+* [Other Operations](#other0operations)
+    - [Check Status](#check-status)
+    - [Restart](#restart)
+    - [Logs](#logs)
+    - [Clear Tasks](#clear-tasks)
 
 ## Installation
 
@@ -88,9 +92,17 @@ The specific configuration of each file is as follows.
        If you want to use the continuous rule, fill in the rule directly with "continuous:" + sleep time after the end of each cycle.
        e.p. `"continuous:1000"`
 
-## Logs
+Any changes of config file will be reloaded in a minute to reload the task, expect for the following two situations:
 
-Based on the log specification of [`@khgame/turtle`](https://github.com/khgame/turtle), you can find the corresponding logs of each task in the `logs` directory under the patrol startup position.
+1. The task is running.
+
+    If the task is running, the reload action will be performed after the task sleep.
+    Therefore, it is best not to set the sleep time in continuous mode too short, in case the configuration cannot be reloaded.
+
+2. The config file are removed.
+
+    Obviously, in the case that the configuration file is deleted, the task will not be canceled. (This is especially important when modifying the configuration name)
+    If you need to cancel the task, you can restart the patrol process.
 
 ## Supported tasks
 
@@ -111,3 +123,25 @@ module.exports = {
 ```
 
 See more examples [here](./example).
+
+## Other Operations
+
+### Check Status
+
+You can use `turtle ls -pi` command in the startup folder to check the state of patrol/
+
+### Restart
+
+You can use `turtle restart [-f] <process-name|process-pid>` command to restart the patrol process
+
+### Logs
+
+Based on the log specification of [`@khgame/turtle`](https://github.com/khgame/turtle), you can find the corresponding logs of each task in the `logs` directory under the patrol startup position.
+
+If you have restart the process by `turtle restart`, you can use command `turtle log -pf` to follow the latest log.
+
+### Clear tasks
+
+For now, you can clear tasks which configs are removed by restart patrol
+
+
