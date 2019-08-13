@@ -1,4 +1,4 @@
-'using strict'
+"using strict";
 
 import {defaultConf} from "./defaultConf";
 import {CommandLineApp, IConf} from "@khgame/turtle/lib";
@@ -15,6 +15,6 @@ const cli = new CommandLineApp(
     () => new Api(Object.values(controllers)),
     Object.values(workers).map(w => (() => new w())),
     defaultConf as IConf
-    );
+);
 
 cli.run();

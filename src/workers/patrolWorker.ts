@@ -16,6 +16,7 @@ import {forMs} from "kht/lib";
 import * as fs from "fs-extra";
 import * as Path from "path";
 import {IPatrolRule} from "../const";
+import {Continuous} from "../core/continuous";
 
 interface ISchedulerResult {
     status: "ok" | "error";
@@ -27,7 +28,7 @@ interface IScheduler {
     tag: string;
     hash: string;
     rule: string;
-    job?: Job;
+    job?: Job | Continuous;
     running: boolean;
 }
 
@@ -42,7 +43,7 @@ export class PatrolWorker extends Worker implements IWorker {
     public readonly cache: IMemCache = genMemCache();
 
     constructor() {
-        super("sample");
+        super("patrol");
         PatrolWorker.inst = this;
         this.runningState = WorkerRunningState.PREPARED;
     }
@@ -92,7 +93,8 @@ export class PatrolWorker extends Worker implements IWorker {
         const task: IScheduler = {
             tag, rule, hash, running: false
         };
-        const job: Job = scheduleJob(rule, async () => {
+
+        const procedure = async () => {
             this.processRunning += 1;
             task.running = true;
             try {
@@ -105,7 +107,11 @@ export class PatrolWorker extends Worker implements IWorker {
                 this.processRunning -= 1;
                 task.running = false;
             }
-        });
+        };
+
+        const job : Job | Continuous = rule.startsWith("patrol:")
+            ? Continuous.create(procedure, parseInt(rule.substr(7)))
+            : scheduleJob(rule, procedure);
 
         this.log.info(`⊙ created job ${tag} rule:"${rule}" job:${job}`);
 
@@ -130,7 +136,7 @@ export class PatrolWorker extends Worker implements IWorker {
         this.log.info("⊙ loadTasks started");
         let round = 0;
         while (true) {
-            await forMs(10000);
+            await forMs(100);
             this.log.info(`⊙ loadTasks ${this.name} round ${round} started `);
 
             this.processRunning += 1;
