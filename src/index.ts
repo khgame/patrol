@@ -1,4 +1,4 @@
-"using strict";
+"use strict";
 
 import {defaultConf} from "./defaultConf";
 import {CommandLineApp, IConf} from "@khgame/turtle/lib";

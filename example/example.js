@@ -2,7 +2,7 @@
 
 module.exports = {
 
-    schedule: (log) => {
+    patrol: (log) => {
         log.info(Date.now())
     }
 }

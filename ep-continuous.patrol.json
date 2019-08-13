@@ -1,5 +1,5 @@
 {
-  "script" : "./example/example",
-  "rule": "patrol:1000",
+  "script" : "./example/example.js",
+  "rule": "continuous:1000",
   "sendMail": true
 }

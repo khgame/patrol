@@ -109,8 +109,8 @@ export class PatrolWorker extends Worker implements IWorker {
             }
         };
 
-        const job : Job | Continuous = rule.startsWith("patrol:")
-            ? Continuous.create(procedure, parseInt(rule.substr(7)))
+        const job : Job | Continuous = rule.startsWith("continuous:")
+            ? Continuous.create(procedure, parseInt(rule.substr(11)))
             : scheduleJob(rule, procedure);
 
         this.log.info(`⊙ created job ${tag} rule:"${rule}" job:${job}`);
@@ -181,9 +181,9 @@ export class PatrolWorker extends Worker implements IWorker {
 
                         this.log.info(`⊙ start load scheduler ${tagName}: read file ${d}`);
 
-                        const {schedule} = require(Path.isAbsolute(data.script) ? data.script : Path.resolve(Path.dirname(d), data.script));
+                        const {patrol} = require(Path.isAbsolute(data.script) ? data.script : Path.resolve(Path.dirname(d), data.script));
 
-                        this.insertScheduler(tagName, hash, data.rule, schedule);
+                        this.insertScheduler(tagName, hash, data.rule, patrol);
 
                     } catch (e) {
                         console.error(`⊙ load data ${d} error: ${e}, ${e.stack}`);
