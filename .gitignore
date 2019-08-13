@@ -1,6 +1,8 @@
 #
 ecosystem.config.js
 *.out
+lib
+src_lib
 
 # env
 

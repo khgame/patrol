@@ -17,7 +17,7 @@
   "license": "MIT",
   "scripts": {
     "test": "mocha -r ts-node/register test/**/*.test.ts --exit",
-    "build": "rimraf ./bin && npx tsc",
+    "build": "rimraf ./bin && npx tsc -p tsconfig.json && rimraf ./lib && npx tsc -p tsconfig.lib.json",
     "lint": "npx tslint --fix --project .",
     "app": "npx ts-node ./src",
     "watch": "cross-env nodemon --inspect --watch 'src/**/*' -e ts,tsx --exec 'node -r ts-node/register' ./src/index.ts start",

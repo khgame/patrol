@@ -1,7 +1,7 @@
 import {Get, JsonController} from "routing-controllers";
 import {genLogger, Logger} from "@khgame/turtle/lib";
 
-import {SampleWorker} from "../workers";
+import {PatrolWorker} from "../workers";
 
 @JsonController("/panel")
 export class AccountController {
@@ -18,7 +18,7 @@ export class AccountController {
 
     @Get("/running_process")
     async getProcessRunning() {
-        return SampleWorker.inst.processRunning;
+        return PatrolWorker.inst.processRunning;
     }
 
 
