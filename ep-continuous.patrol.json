@@ -1,0 +1,5 @@
+{
+  "script" : "./example/example",
+  "rule": "patrol:1000",
+  "sendMail": true
+}
