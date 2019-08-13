@@ -2,6 +2,7 @@ import {genLogger, genMemCache, IWorker, Worker, WorkerRunningState, Logger, IMe
 import {Job, scheduleJob} from "node-schedule";
 import {forMs} from "kht/lib";
 import * as fs from "fs-extra";
+import * as Path from "path";
 
 interface ISchedulerResult {
     status: "ok" | "error";
@@ -27,7 +28,11 @@ export class PatrolWorker extends Worker implements IWorker {
         tag: string,
         rule: string,
         job: Job
-    }>;
+    }> = [];
+
+    public hasScheduler(tag: string) {
+        return this.scheduler.findIndex(s => s.tag === tag) >= 0;
+    }
 
     public insertScheduler(
         tag: string,
@@ -42,7 +47,7 @@ export class PatrolWorker extends Worker implements IWorker {
             task.runningOffset += 1;
             try {
                 this.log.warn(`⊙ schedule ${tag} triggered, rule:"${rule}"`);
-                await method();
+                await Promise.resolve(method());
             } catch (e) {
                 this.log.error(`⊙ schedule ${tag} exited, rule:"${rule}" error: ${e}, ${e.stack} `);
                 throw e;
@@ -52,6 +57,7 @@ export class PatrolWorker extends Worker implements IWorker {
             }
         });
 
+        console.log(`created job ${tag} rule:"${rule}" job:${job}`);
         task.job = job;
         this.scheduler.push(task);
     }
@@ -80,12 +86,50 @@ export class PatrolWorker extends Worker implements IWorker {
                 const pthConf = "/etc/patrol/conf.d";
 
                 if (fs.existsSync(pthLocal)) {
-                    ds.push(... fs.readdirSync(pthLocal).filter(str => str.trim().toLowerCase().endsWith(".patrol.json")));
+                    ds.push(
+                        ... fs.readdirSync(pthLocal)
+                            .filter(
+                                str => str.trim().toLowerCase().endsWith(".patrol.json")
+                            ).map(n => Path.resolve(pthLocal, n))
+                    );
                 }
+
                 if (fs.existsSync(pthConf)) {
-                    ds.push(... fs.readdirSync(pthConf).filter(str => str.trim().toLowerCase().endsWith(".patrol.json")));
+                    ds.push(
+                        ... fs.readdirSync(pthConf)
+                            .filter(str =>
+                                str.trim().toLowerCase().endsWith(".patrol.json")
+                            ).map(n => Path.resolve(pthConf, n))
+                    );
                 }
+
+                // ds = ds.map(d => d.substr(0, d.length - 12));
+
                 console.log(ds);
+
+                for (const i in ds) {
+                    const d = ds[i];
+
+                    if (this.hasScheduler(d)) {
+                        continue;
+                    }
+
+                    try {
+                        console.log("read file ", d);
+                        const data = fs.readJsonSync(d);
+                        console.log(data, Path.dirname(d));
+
+                        const {schedule} = require(Path.isAbsolute(data.script) ? data.script : Path.resolve(Path.dirname(d), data.script));
+
+                        this.insertScheduler(d, data.rule, schedule);
+
+                        // console.log(d, data.rule, schedule);
+
+                    } catch (e) {
+                        console.error(`load data ${d} error: ${e}, ${e.stack}`);
+                    }
+                }
+
             }
             catch (e) {
                 this.log.error(`⊙ loadTasks ${this.name} error: ${e}, ${e.stack} `);
