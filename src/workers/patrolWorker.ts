@@ -31,7 +31,7 @@ interface ITask {
     running: boolean;
 }
 
-interface IScheduler {
+export interface IScheduler {
     tag: string;
     hash: string;
     tasks: ITask[];

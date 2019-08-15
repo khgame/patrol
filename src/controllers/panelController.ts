@@ -1,7 +1,7 @@
 import {Get, JsonController} from "routing-controllers";
 import {genLogger, Logger} from "@khgame/turtle/lib";
 
-import {PatrolWorker} from "../workers";
+import {IScheduler, PatrolWorker} from "../workers";
 
 @JsonController("/panel")
 export class AccountController {
@@ -19,6 +19,11 @@ export class AccountController {
     @Get("/running_process")
     async getProcessRunning() {
         return PatrolWorker.inst.processRunning;
+    }
+
+    @Get("/schedulers")
+    async getSchedulers(): Promise<IScheduler[]> {
+        return PatrolWorker.inst.schedulers;
     }
 
 
