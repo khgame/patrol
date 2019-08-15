@@ -1,0 +1,13 @@
+[
+    {
+      "script" : "./example/example.js",
+      "rule": "continuous:1000",
+      "sendMail": true
+    },
+    {
+      "script" : "./example/example.js",
+      "rule": "*/20 * * * * *",
+      "sendMail": true
+    }
+]
+
