@@ -13,6 +13,7 @@ which can help you easily master various types of scheduled tasks.
     - [Configs](#configs)
         - [Configs Folders](#config-folders)
         - [Configs Files](#config-files)
+        - [Batch Tasks](#batch-tasks)
 * [Supported Tasks](#supported-tasks)
     - [Js scripts and node packages](#js-scripts-and-node-packages)
 * [Other Operations](#other0operations)
@@ -20,6 +21,7 @@ which can help you easily master various types of scheduled tasks.
     - [Restart](#restart)
     - [Logs](#logs)
     - [Clear Tasks](#clear-tasks)
+* [Monitor APIs](#monitor-apis)
 
 ## Installation
 
@@ -67,7 +69,7 @@ The specific configuration of each file is as follows.
 ```json
 # cat /etc/patrol/conf.d/ep-scheduler.patrol.json
 {
-  "script" : "./example/example.js",
+  "script" : "./scripts/to/run.js",
   "rule": "*/10 * * * * *"
 }
 ```
@@ -103,6 +105,25 @@ Any changes of config file will be reloaded in a minute to reload the task, expe
 
     Obviously, in the case that the configuration file is deleted, the task will not be canceled. (This is especially important when modifying the configuration name)
     If you need to cancel the task, you can restart the patrol process.
+
+When config file are reloaded, the related package will also be reloaded.
+
+#### Batch Tasks
+
+You can also config a batch of tasks in a config file.
+
+```json
+[
+    {
+      "script" : "./scripts/to/run.js",
+      "rule": "continuous:60000"
+    },
+    {
+      "script" : "./scripts/report/status.js",
+      "rule": "0 */2 * * * *"
+    }
+]
+```
 
 ## Supported tasks
 
@@ -143,5 +164,10 @@ If you have restart the process by `turtle restart`, you can use command `turtle
 ### Clear tasks
 
 For now, you can clear tasks which configs are removed by restart patrol
+
+## Monitor APIs
+
+- `/api/v1/core/health` : [GET] get health status of the patrol service.
+- `/api/v1/panel/scheduler` : [GET] get status of all schedulers.
 
 
