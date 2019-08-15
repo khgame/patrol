@@ -1,6 +1,5 @@
 {
   "script" : "./example/example.js",
-  "rule": "*/10 * * * * *",
+  "rule": "*/20 * * * * *",
   "sendMail": true
 }
-tur

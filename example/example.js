@@ -3,6 +3,6 @@
 module.exports = {
 
     patrol: (log) => {
-        log.info(Date.now())
+        log.info("v1 : " +Date.now())
     }
 };
