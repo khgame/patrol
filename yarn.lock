@@ -76,10 +76,10 @@
     winston "^3.2.1"
     winston-daily-rotate-file "^3.8.0"
 
-"@khgame/turtle@^0.0.77":
-  version "0.0.77"
-  resolved "https://registry.npm.taobao.org/@khgame/turtle/download/@khgame/turtle-0.0.77.tgz?cache=0&sync_timestamp=1565708950980&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40khgame%2Fturtle%2Fdownload%2F%40khgame%2Fturtle-0.0.77.tgz#89eafcc100a52130c268f1af82e0f87381ec74aa"
-  integrity sha1-ier8wQClITDCaPGvguD4c4HsdKo=
+"@khgame/turtle@^0.0.83":
+  version "0.0.83"
+  resolved "https://registry.npm.taobao.org/@khgame/turtle/download/@khgame/turtle-0.0.83.tgz#5ba88221a1a212fd399c43ec9ba6da1945e47682"
+  integrity sha1-W6iCIaGiEv05nEPsm6baGUXkdoI=
   dependencies:
     "@khgame/err" "^0.1.1"
     "@khgame/jsonrpc" "^0.1.7"
@@ -87,7 +87,7 @@
     axios "^0.19.0"
     bignumber.js "^9.0.0"
     chalk "^2.4.2"
-    commander "^2.20.0"
+    easy-commander "^0.0.3"
     elliptic "^6.5.0"
     fs-extra "^8.1.0"
     get-port "^5.0.0"
@@ -258,6 +258,11 @@
   version "12.7.1"
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.7.1.tgz?cache=0&sync_timestamp=1565214337285&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.7.1.tgz#3b5c3a26393c19b400844ac422bd0f631a94d69d"
   integrity sha1-O1w6Jjk8GbQAhErEIr0PYxqU1p0=
+
+"@types/node@^12.7.2":
+  version "12.7.2"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.7.2.tgz?cache=0&sync_timestamp=1565829879515&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.7.2.tgz#c4e63af5e8823ce9cc3f0b34f7b998c2171f0c44"
+  integrity sha1-xOY69eiCPOnMPws097mYwhcfDEQ=
 
 "@types/range-parser@*":
   version "1.2.3"
@@ -940,6 +945,11 @@ commander@^2.12.1, commander@^2.20.0:
   resolved "https://registry.npm.taobao.org/commander/download/commander-2.20.0.tgz?cache=0&sync_timestamp=1565398176321&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-2.20.0.tgz#d58bb2b5c1ee8f87b0d340027e9e94e222c5a422"
   integrity sha1-1YuytcHuj4ew00ACfp6U4iLFpCI=
 
+commander@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npm.taobao.org/commander/download/commander-3.0.0.tgz?cache=0&sync_timestamp=1565398176321&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-3.0.0.tgz#0641ea00838c7a964627f04cddc336a2deddd60a"
+  integrity sha1-BkHqAIOMepZGJ/BM3cM2ot7d1go=
+
 component-bind@1.0.0:
   version "1.0.0"
   resolved "https://registry.npm.taobao.org/component-bind/download/component-bind-1.0.0.tgz#00c608ab7dcd93897c0009651b1d3a8e1e73bbd1"
@@ -1290,6 +1300,14 @@ duplexer3@^0.1.4:
   version "0.1.4"
   resolved "https://registry.npm.taobao.org/duplexer3/download/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
   integrity sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=
+
+easy-commander@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.npm.taobao.org/easy-commander/download/easy-commander-0.0.3.tgz?cache=0&sync_timestamp=1566323072148&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feasy-commander%2Fdownload%2Feasy-commander-0.0.3.tgz#aed05e199c08860017fde8b1a4354a24e5b72dd9"
+  integrity sha1-rtBeGZwIhgAX/eixpDVKJOW3Ldk=
+  dependencies:
+    "@types/node" "^12.7.2"
+    commander "^3.0.0"
 
 ecurve@^1.0.5:
   version "1.0.6"

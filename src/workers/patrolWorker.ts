@@ -70,6 +70,14 @@ export class PatrolWorker extends Worker implements IWorker {
         this.schedulers.splice(this.schedulers.indexOf(scheduler), 1);
     }
 
+    /**
+     * create a task by config
+     * @param {string} tag - generally, tag will be the name of config `*.patrol.json`
+     * @param {string} ind - index of the task in the config
+     * @param {string} rule - rule of the scheduler, continuous or cron
+     * @param {Function} method - the patrol method
+     * @return {ITask}
+     */
     public insertTask(
         tag: string,
         ind: string,
@@ -111,14 +119,15 @@ export class PatrolWorker extends Worker implements IWorker {
         path: string,
         tag: string,
         hash: string,
-        datas: Array<{ rule: string, script: string }>
+        taskConfList: Array<{ rule: string, script: string }>
     ) {
-        if (datas.length <= 0) {
+        if (taskConfList.length <= 0) {
             throw new Error(`⊙ insert scheduler failed: the input config is empty.`);
         }
 
         const scheduler = this.getScheduler(tag);
 
+        /** try stop and remove old scheduler */
         if (scheduler) {
             if (scheduler.hash === hash) {
                 throw new Error(`⊙ insert scheduler failed: the scheduler ${tag} of hash ${hash} is already exist.`);
@@ -134,28 +143,34 @@ export class PatrolWorker extends Worker implements IWorker {
             this.removeScheduler(tag);
         }
 
+        /** create all task by the dataList, which should be set in the config file */
         const tasks: ITask[] = [];
-        for (let ind in datas) {
-            const {rule, script} = datas[ind];
+        for (let ind in taskConfList) {
+            const {rule, script} = taskConfList[ind];
+            /** get absolute path of the 'path' set in config */
             const requirePath = Path.isAbsolute(script) ? script : Path.resolve(Path.dirname(path), script);
             try {
+                /** only support require mode now */
                 if (require.cache[requirePath]) {
                     this.log.info(`⊙ clear require cache of ${requirePath}`);
                     delete require.cache[requirePath];
                 }
+                /** require the method patrol from the given path */
                 const {patrol} = require(requirePath);
 
-                const task = this.insertTask(tag, datas.length > 1 ? ind : "-", rule, patrol);
+                const task = this.insertTask(tag, taskConfList.length > 1 ? ind : "-", rule, patrol);
                 tasks.push(task);
             } catch (e) {
                 // todo
             }
         }
 
+        /** create scheduler */
         const newScheduler: IScheduler = {
             tag, hash, tasks
         };
 
+        /** insert the created scheduler to pool */
         this.schedulers.push(newScheduler);
 
         return true;
@@ -172,68 +187,67 @@ export class PatrolWorker extends Worker implements IWorker {
         return true;
     }
 
+    getAllConfigFilePaths(): string[] {
+        const pthLocal = process.cwd();
+        const pthConf = "/etc/patrol/conf.d";
+        let configPaths: string[] = [];
+        if (fs.existsSync(pthLocal)) {
+            configPaths.push(
+                ... fs.readdirSync(pthLocal)
+                    .filter(
+                        str => str.trim().toLowerCase().endsWith(".patrol.json")
+                    ).map(n => Path.resolve(pthLocal, n))
+            );
+        }
+
+        if (fs.existsSync(pthConf)) {
+            configPaths.push(
+                ... fs.readdirSync(pthConf)
+                    .filter(str =>
+                        str.trim().toLowerCase().endsWith(".patrol.json")
+                    ).map(n => Path.resolve(pthConf, n))
+            );
+        }
+        return configPaths;
+    }
+
     async loadTasks() {
         this.log.info("⊙ loadTasks started");
         let round = 0;
         while (true) {
             await forMs(100);
-            this.log.info(`⊙ loadTasks ${this.name} round ${round} started `);
+
+            if (round % 100 === 0) {
+                this.log.info(`⊙ loadTasks ${this.name} round ${round} started `);
+            }
 
             this.processRunning += 1;
             try {
-                let configPathes = [];
-                const pthLocal = process.cwd();
-                const pthConf = "/etc/patrol/conf.d";
-
-                if (fs.existsSync(pthLocal)) {
-                    configPathes.push(
-                        ... fs.readdirSync(pthLocal)
-                            .filter(
-                                str => str.trim().toLowerCase().endsWith(".patrol.json")
-                            ).map(n => Path.resolve(pthLocal, n))
-                    );
-                }
-
-                if (fs.existsSync(pthConf)) {
-                    configPathes.push(
-                        ... fs.readdirSync(pthConf)
-                            .filter(str =>
-                                str.trim().toLowerCase().endsWith(".patrol.json")
-                            ).map(n => Path.resolve(pthConf, n))
-                    );
-                }
-
-                for (const i in configPathes) {
-                    const confPath = configPathes[i];
+                const configPaths = this.getAllConfigFilePaths();
+                for (const i in configPaths) {
+                    const confPath = configPaths[i];
 
                     const baseName = Path.basename(confPath);
                     const tagName = baseName.substr(0, baseName.length - 12);
 
                     try {
-                        const dataStr = fs.readFileSync(confPath).toString();
-                        let data = JSON.parse(dataStr);
-                        const hash = Crypto.getMd5(dataStr);
+                        const strConfig = fs.readFileSync(confPath).toString();
+                        /** find out hash for the config file */
+                        const hash = Crypto.getMd5(strConfig);
 
+                        // do nothing when the file are not changed
                         const existedScheduler = this.getScheduler(tagName);
                         if (existedScheduler && existedScheduler.hash === hash) {
                             continue;
                         }
-
                         this.log.info(`⊙ start load scheduler ${tagName}: read file ${confPath}`);
 
-                        if (!_.isArray(data)) {
-                            data = [data];
+                        let configs = JSON.parse(strConfig);
+                        if (!_.isArray(configs)) {
+                            configs = [configs];
                         }
 
-                        // const requirePath = Path.isAbsolute(data.script) ? data.script : Path.resolve(Path.dirname(d), data.script);
-                        // if (require.cache[requirePath]) {
-                        //     this.log.info(`⊙ clear require cache of ${requirePath}`);
-                        //     delete require.cache[requirePath];
-                        // }
-                        // const {patrol} = require(requirePath);
-
-                        this.insertScheduler(confPath, tagName, hash, data);
-
+                        this.insertScheduler(confPath, tagName, hash, configs);
                     } catch (e) {
                         console.error(`⊙ load data ${confPath} error: ${e}, ${e.stack}`);
                     }
