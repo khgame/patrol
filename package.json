@@ -28,7 +28,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@khgame/turtle": "^0.0.83",
+    "@khgame/turtle": "^0.0.85",
     "consul": "^0.34.1",
     "eosplayer": "^0.5.11",
     "fs-extra": "^8.1.0",

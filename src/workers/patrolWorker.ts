@@ -9,14 +9,14 @@ import {
     IMemCache,
     turtle,
     CAssert,
-    mail, Crypto,
+    mail, Crypto, Continuous,
 } from "@khgame/turtle";
 import {Job, scheduleJob} from "node-schedule";
 import {forMs} from "kht/lib";
 import * as fs from "fs-extra";
 import * as Path from "path";
 import {IPatrolRule} from "../const";
-import {Continuous} from "../core/continuous";
+// import {Continuous} from "../core/continuous";
 import * as _ from "lodash";
 
 interface ISchedulerResult {
@@ -38,9 +38,6 @@ export interface IScheduler {
 }
 
 export class PatrolWorker extends Worker implements IWorker {
-
-    public log: Logger = genLogger("worker:patrol");
-    public assert: CAssert = genAssert("worker:patrol");
 
     static inst: PatrolWorker;
 
@@ -88,24 +85,24 @@ export class PatrolWorker extends Worker implements IWorker {
             rule, running: false
         };
 
-        const procedure = async () => {
-            this.processRunning += 1;
-            task.running = true;
-            try {
-                this.log.warn(`⊙ schedule ${tag}:${ind} triggered, rule:"${rule}"`);
-                await Promise.resolve(method(genLogger(tag)));
-            } catch (e) {
-                this.log.error(`⊙ schedule ${tag}:${ind} exited, rule:"${rule}" error: ${e}, ${e.stack} `);
-                throw e;
-            } finally {
-                this.processRunning -= 1;
-                task.running = false;
-            }
-        };
+        const exec = () => method(genLogger(tag));
 
         const job: Job | Continuous = rule.startsWith("continuous:")
-            ? Continuous.create(procedure, parseInt(rule.substr(11)))
-            : scheduleJob(rule, procedure);
+            ? this.createContinuousWork(exec, parseInt(rule.substr(11)), tag) // Continuous.create(procedure, parseInt(rule.substr(11)))
+            : scheduleJob(rule, async (date: Date) => {
+                this.processRunning += 1;
+                task.running = true;
+                try {
+                    this.log.warn(`⊙ schedule ${tag}:${ind} triggered, rule:"${rule}"`);
+                    await Promise.resolve(exec());
+                } catch (e) {
+                    this.log.error(`⊙ schedule ${tag}:${ind} exited, rule:"${rule}" error: ${e}, ${e.stack} `);
+                    throw e;
+                } finally {
+                    this.processRunning -= 1;
+                    task.running = false;
+                }
+            });
 
         this.log.info(`⊙ created job ${tag} rule:"${rule}" job:${job}`);
 
