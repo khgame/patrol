@@ -1,6 +1,6 @@
 {
   "name": "@khgame/patrol",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "bin/index.js",
   "bin": {
@@ -28,7 +28,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@khgame/turtle": "^0.0.85",
+    "@khgame/turtle": "^0.0.86",
     "consul": "^0.34.1",
     "eosplayer": "^0.5.11",
     "fs-extra": "^8.1.0",

@@ -76,10 +76,10 @@
     winston "^3.2.1"
     winston-daily-rotate-file "^3.8.0"
 
-"@khgame/turtle@^0.0.85":
-  version "0.0.85"
-  resolved "https://registry.npm.taobao.org/@khgame/turtle/download/@khgame/turtle-0.0.85.tgz#4347bef4f9e1074b345f9dbe5dcefde059899a35"
-  integrity sha1-Q0e+9PnhB0s0X52+Xc794FmJmjU=
+"@khgame/turtle@^0.0.86":
+  version "0.0.86"
+  resolved "https://registry.npm.taobao.org/@khgame/turtle/download/@khgame/turtle-0.0.86.tgz#2db6d4119c244a507b5a8853037d11f2dbf3c2c1"
+  integrity sha1-LbbUEZwkSlB7WohTA30R8tvzwsE=
   dependencies:
     "@khgame/err" "^0.1.1"
     "@khgame/jsonrpc" "^0.1.7"
