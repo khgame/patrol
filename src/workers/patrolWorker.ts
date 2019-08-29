@@ -89,20 +89,7 @@ export class PatrolWorker extends Worker implements IWorker {
 
         const job: Job | Continuous = rule.startsWith("continuous:")
             ? this.createContinuousWork(exec, parseInt(rule.substr(11)), tag) // Continuous.create(procedure, parseInt(rule.substr(11)))
-            : scheduleJob(rule, async (date: Date) => {
-                this.processRunning += 1;
-                task.running = true;
-                try {
-                    this.log.warn(`⊙ schedule ${tag}:${ind} triggered, rule:"${rule}"`);
-                    await Promise.resolve(exec());
-                } catch (e) {
-                    this.log.error(`⊙ schedule ${tag}:${ind} exited, rule:"${rule}" error: ${e}, ${e.stack} `);
-                    throw e;
-                } finally {
-                    this.processRunning -= 1;
-                    task.running = false;
-                }
-            });
+            : this.createSchedulerWork(rule, exec, tag);
 
         this.log.info(`⊙ created job ${tag} rule:"${rule}" job:${job}`);
 

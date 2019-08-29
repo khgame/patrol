@@ -76,10 +76,10 @@
     winston "^3.2.1"
     winston-daily-rotate-file "^3.8.0"
 
-"@khgame/turtle@^0.0.86":
-  version "0.0.86"
-  resolved "https://registry.npm.taobao.org/@khgame/turtle/download/@khgame/turtle-0.0.86.tgz#2db6d4119c244a507b5a8853037d11f2dbf3c2c1"
-  integrity sha1-LbbUEZwkSlB7WohTA30R8tvzwsE=
+"@khgame/turtle@^0.0.87":
+  version "0.0.87"
+  resolved "https://registry.npm.taobao.org/@khgame/turtle/download/@khgame/turtle-0.0.87.tgz#53f3978e7a21c474be2be6d450bb43f8cbbe5f15"
+  integrity sha1-U/OXjnohxHS+K+bUULtD+Mu+XxU=
   dependencies:
     "@khgame/err" "^0.1.1"
     "@khgame/jsonrpc" "^0.1.7"
@@ -261,7 +261,7 @@
 
 "@types/node@^12.7.2":
   version "12.7.2"
-  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.7.2.tgz?cache=0&sync_timestamp=1565829879515&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.7.2.tgz#c4e63af5e8823ce9cc3f0b34f7b998c2171f0c44"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.7.2.tgz?cache=0&sync_timestamp=1566325318079&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.7.2.tgz#c4e63af5e8823ce9cc3f0b34f7b998c2171f0c44"
   integrity sha1-xOY69eiCPOnMPws097mYwhcfDEQ=
 
 "@types/range-parser@*":
@@ -1303,7 +1303,7 @@ duplexer3@^0.1.4:
 
 easy-commander@^0.0.3:
   version "0.0.3"
-  resolved "https://registry.npm.taobao.org/easy-commander/download/easy-commander-0.0.3.tgz?cache=0&sync_timestamp=1566323072148&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feasy-commander%2Fdownload%2Feasy-commander-0.0.3.tgz#aed05e199c08860017fde8b1a4354a24e5b72dd9"
+  resolved "https://registry.npm.taobao.org/easy-commander/download/easy-commander-0.0.3.tgz#aed05e199c08860017fde8b1a4354a24e5b72dd9"
   integrity sha1-rtBeGZwIhgAX/eixpDVKJOW3Ldk=
   dependencies:
     "@types/node" "^12.7.2"
@@ -2414,7 +2414,7 @@ kht@^0.0.11:
 
 kht@^0.0.12:
   version "0.0.12"
-  resolved "https://registry.npm.taobao.org/kht/download/kht-0.0.12.tgz?cache=0&sync_timestamp=1565334228956&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fkht%2Fdownload%2Fkht-0.0.12.tgz#718b56b6237107102c5427c58dfe60aca60f0751"
+  resolved "https://registry.npm.taobao.org/kht/download/kht-0.0.12.tgz#718b56b6237107102c5427c58dfe60aca60f0751"
   integrity sha1-cYtWtiNxBxAsVCfFjf5grKYPB1E=
   dependencies:
     "@babel/runtime" "^7.3.1"
