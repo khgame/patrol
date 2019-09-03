@@ -76,10 +76,10 @@
     winston "^3.2.1"
     winston-daily-rotate-file "^3.8.0"
 
-"@khgame/turtle@^0.0.87":
-  version "0.0.87"
-  resolved "https://registry.npm.taobao.org/@khgame/turtle/download/@khgame/turtle-0.0.87.tgz#53f3978e7a21c474be2be6d450bb43f8cbbe5f15"
-  integrity sha1-U/OXjnohxHS+K+bUULtD+Mu+XxU=
+"@khgame/turtle@^0.0.90":
+  version "0.0.90"
+  resolved "https://registry.npm.taobao.org/@khgame/turtle/download/@khgame/turtle-0.0.90.tgz?cache=0&sync_timestamp=1567447637523&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40khgame%2Fturtle%2Fdownload%2F%40khgame%2Fturtle-0.0.90.tgz#ee36eb095944659d1d6d793cbc032b56715f9575"
+  integrity sha1-7jbrCVlEZZ0dbXk8vAMrVnFflXU=
   dependencies:
     "@khgame/err" "^0.1.1"
     "@khgame/jsonrpc" "^0.1.7"
@@ -92,7 +92,7 @@
     fs-extra "^8.1.0"
     get-port "^5.0.0"
     glob "^7.1.3"
-    ip-public "^1.0.1"
+    ip-public "^1.0.2"
     kht "^0.0.12"
     md5 "^2.2.1"
     node-cache "^4.2.1"
@@ -2080,10 +2080,10 @@ ioredis@^4.11.2:
     redis-parser "^3.0.0"
     standard-as-callback "^2.0.1"
 
-ip-public@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npm.taobao.org/ip-public/download/ip-public-1.0.1.tgz#68f716b028116230a7212cdf0be655b6aa1223b2"
-  integrity sha1-aPcWsCgRYjCnISzfC+ZVtqoSI7I=
+ip-public@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npm.taobao.org/ip-public/download/ip-public-1.0.2.tgz#b727fbcda61a8ecc75fb95ada7615bbb66a00a37"
+  integrity sha1-tyf7zaYajsx1+5Wtp2Fbu2agCjc=
   dependencies:
     "@types/axios" "^0.14.0"
     axios "^0.19.0"
@@ -4037,10 +4037,10 @@ tslib@^1.8.0, tslib@^1.8.1:
   resolved "https://registry.npm.taobao.org/tslib/download/tslib-1.10.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftslib%2Fdownload%2Ftslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
   integrity sha1-w8GflZc/sKYpc/sJ2Q2WHuQ+XIo=
 
-tslint@^5.15.0:
-  version "5.18.0"
-  resolved "https://registry.npm.taobao.org/tslint/download/tslint-5.18.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftslint%2Fdownload%2Ftslint-5.18.0.tgz#f61a6ddcf372344ac5e41708095bbf043a147ac6"
-  integrity sha1-9hpt3PNyNErF5BcICVu/BDoUesY=
+tslint@^5.19.0:
+  version "5.19.0"
+  resolved "https://registry.npm.taobao.org/tslint/download/tslint-5.19.0.tgz#a2cbd4a7699386da823f6b499b8394d6c47bb968"
+  integrity sha1-osvUp2mThtqCP2tJm4OU1sR7uWg=
   dependencies:
     "@babel/code-frame" "^7.0.0"
     builtin-modules "^1.1.1"
