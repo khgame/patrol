@@ -91,7 +91,7 @@ export class PatrolWorker extends Worker implements IWorker {
             ? this.createContinuousWork(exec, parseInt(rule.substr(11)), tag) // Continuous.create(procedure, parseInt(rule.substr(11)))
             : this.createSchedulerWork(rule, exec, tag);
 
-        this.log.info(`⊙ created job ${tag} rule:"${rule}" job:${job}`);
+        this.log.info(`⊙ created job ${tag} rule:"${rule}" job:${JSON.stringify(job)}`);
 
         task.job = job;
 
@@ -146,6 +146,7 @@ export class PatrolWorker extends Worker implements IWorker {
                 tasks.push(task);
             } catch (e) {
                 // todo
+                this.log.error(`create task of ${tag} failed: rule - ${rule}, script - ${script}`);
             }
         }
 
