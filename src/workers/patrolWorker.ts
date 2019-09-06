@@ -85,10 +85,18 @@ export class PatrolWorker extends Worker implements IWorker {
             rule, running: false
         };
 
-        const exec = () => method(genLogger(tag));
+        let logger = genLogger(tag);
+        const exec = () => {
+            try {
+                return method(logger);
+            } catch (e) {
+                logger.error(`uncaught exception in patrol ${tag}`);
+                throw e;
+            }
+        };
 
         const job: Job | Continuous = rule.startsWith("continuous:")
-            ? this.createContinuousWork(exec, parseInt(rule.substr(11)), tag) // Continuous.create(procedure, parseInt(rule.substr(11)))
+            ? this.createContinuousWork(exec, parseInt(rule.substr(11)), tag, false) // Continuous.create(procedure, parseInt(rule.substr(11)))
             : this.createSchedulerWork(rule, exec, tag);
 
         this.log.info(`⊙ created job ${tag} rule:"${rule}" job:${JSON.stringify(job)}`);
